@@ -159,6 +159,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Lab 28 — runtime artifacts (mounted volumes)
+delta-lake/
+*.parquet
+
 # Spyder project settings
 .spyderproject
 .spyproject

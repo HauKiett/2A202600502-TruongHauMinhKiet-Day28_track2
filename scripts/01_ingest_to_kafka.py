@@ -2,8 +2,9 @@
 from kafka import KafkaProducer
 import json, time
 
+import os
 producer = KafkaProducer(
-    bootstrap_servers="localhost:9092",
+    bootstrap_servers=os.environ.get("KAFKA_BOOTSTRAP", "localhost:29092"),
     value_serializer=lambda v: json.dumps(v).encode()
 )
 
@@ -19,4 +20,4 @@ sample_data = [
     {"id": "doc_002", "text": "Kafka to Airflow pipeline", "timestamp": time.time()},
 ]
 ingest_data(sample_data)
-print("Integration 1 OK: Data → Kafka")
+print("Integration 1 OK: Data -> Kafka")

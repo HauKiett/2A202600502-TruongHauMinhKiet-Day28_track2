@@ -49,12 +49,19 @@ check("Redis reachable", lambda:
 
 print("\n=== KAFKA ===")
 def check_kafka_topics():
-    result = subprocess.run(
-        ["docker", "exec", "lab28-kafka-1", "kafka-topics", "--list",
-         "--bootstrap-server", "localhost:9092"],
-        capture_output=True, text=True
+    """Locate the kafka container dynamically and list topics."""
+    ps = subprocess.run(
+        ["docker", "ps", "--format", "{{.Names}}", "--filter", "name=kafka"],
+        capture_output=True, text=True, check=True,
     )
-    assert "data.raw" in result.stdout
+    container = next((n for n in ps.stdout.strip().splitlines() if "kafka" in n and "zookeeper" not in n), None)
+    assert container, "No kafka container running"
+    result = subprocess.run(
+        ["docker", "exec", container, "kafka-topics", "--list",
+         "--bootstrap-server", "kafka:9092"],
+        capture_output=True, text=True, check=True,
+    )
+    assert "data.raw" in result.stdout, f"data.raw not found. Topics: {result.stdout!r}"
 
 check("Kafka topics exist", check_kafka_topics)
 
@@ -64,4 +71,4 @@ total = len(results)
 score = (passed / total) * 100
 print(f"\n{'='*40}")
 print(f"Production Readiness Score: {passed}/{total} = {score:.0f}%")
-print(f"Target: >80% — Status: {'READY' if score >= 80 else 'NOT READY'}")
+print(f"Target: >80% -- Status: {'READY' if score >= 80 else 'NOT READY'}")

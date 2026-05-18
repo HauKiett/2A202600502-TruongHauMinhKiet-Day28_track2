@@ -1,0 +1,34 @@
+=== docker compose ps ===
+time="2026-05-18T10:33:31+07:00" level=warning msg="D:\\AIThucChien\\track2_chuyensau_Data\\2A202600502-TruongHauMinhKiet-Day28_track2\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+NAME                                                          IMAGE                                                    COMMAND                  SERVICE          CREATED          STATUS          PORTS
+2a202600502-truonghauminhkiet-day28_track2-api-gateway-1      2a202600502-truonghauminhkiet-day28_track2-api-gateway   "uvicorn main:app --…"   api-gateway      18 minutes ago   Up 18 minutes   0.0.0.0:8000->8000/tcp
+2a202600502-truonghauminhkiet-day28_track2-grafana-1          grafana/grafana:latest                                   "/run.sh"                grafana          18 minutes ago   Up 18 minutes   0.0.0.0:3000->3000/tcp
+2a202600502-truonghauminhkiet-day28_track2-kafka-1            confluentinc/cp-kafka:7.5.0                              "/etc/confluent/dock…"   kafka            3 minutes ago    Up 3 minutes    0.0.0.0:9092->9092/tcp, 0.0.0.0:29092->29092/tcp
+2a202600502-truonghauminhkiet-day28_track2-prefect-orion-1    prefecthq/prefect:2.14.0-python3.10                      "/usr/bin/tini -g --…"   prefect-orion    16 minutes ago   Up 16 minutes   0.0.0.0:4200->4200/tcp
+2a202600502-truonghauminhkiet-day28_track2-prefect-worker-1   prefecthq/prefect:2.14.0-python3.10                      "/bin/bash -c 'pip i…"   prefect-worker   16 minutes ago   Up 16 minutes   
+2a202600502-truonghauminhkiet-day28_track2-prometheus-1       prom/prometheus:latest                                   "/bin/prometheus --c…"   prometheus       18 minutes ago   Up 18 minutes   0.0.0.0:9090->9090/tcp
+2a202600502-truonghauminhkiet-day28_track2-qdrant-1           qdrant/qdrant:latest                                     "./entrypoint.sh"        qdrant           18 minutes ago   Up 18 minutes   0.0.0.0:6333->6333/tcp, 6334/tcp
+2a202600502-truonghauminhkiet-day28_track2-redis-1            redis:7-alpine                                           "docker-entrypoint.s…"   redis            18 minutes ago   Up 18 minutes   0.0.0.0:6379->6379/tcp
+2a202600502-truonghauminhkiet-day28_track2-zookeeper-1        confluentinc/cp-zookeeper:7.5.0                          "/etc/confluent/dock…"   zookeeper        18 minutes ago   Up 18 minutes   2888/tcp, 0.0.0.0:2181->2181/tcp, 3888/tcp
+
+=== api-gateway /health ===
+{"status":"ok"}
+
+=== api-gateway /ready ===
+{"status":"degraded","checks":{"qdrant":true,"vllm":false}}
+
+=== api-gateway /api/v1/chat (degraded fallback) ===
+{"answer":"[degraded] No VLLM_URL configured. Echo query: What is platform engineering?","latency_ms":8.17,"model":"fallback-echo","context_hits":0,"degraded":true}
+
+=== prefect API health ===
+true
+
+=== prometheus targets (api-gateway) ===
+{"status":"error","errorType":"bad_data","error":"invalid parameter \"query\": 1:6: parse error: unexpected \"=\""}
+
+=== qdrant /collections/documents ===
+{"result":{"status":"green","optimizer_status":"ok","indexed_vectors_count":0,"points_count":3,"segments_count":6,"config":{"params":{"vectors":{"size":384,"distance":"Cosine"},"shard_number":1,"replication_factor":1,"write_consistency_factor":1,"on_disk_payload":true},"hnsw_config":{"m":16,"ef_construct":100,"full_scan_threshold":10000,"max_indexing_threads":0,"on_disk":false},"optimizer_config":{"deleted_threshold":0.2,"vacuum_min_vector_number":1000,"default_segment_number":0,"max_segment_size":null,"memmap_threshold":null,"indexing_threshold":10000,"flush_interval_sec":5,"max_optimization_threads":null,"prevent_unoptimized":null},"wal_config":{"wal_capacity_mb":32,"wal_segments_ahead":0,"wal_retain_closed":1},"quantization_config":null},"payload_schema":{},"update_queue":{"length":0}},"status":"ok","time":0.000651804}
+
+=== kafka topics list ===
+__consumer_offsets
+data.raw

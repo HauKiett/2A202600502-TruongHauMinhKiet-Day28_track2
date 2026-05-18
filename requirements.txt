@@ -1,0 +1,17 @@
+# Dependencies for running scripts/ and smoke-tests/ from host machine.
+# Inside the api-gateway container, see api-gateway/requirements.txt.
+# Inside the prefect-worker container, see prefect/flows/requirements.txt.
+
+kafka-python>=2.0.2
+qdrant-client>=1.14.0
+redis>=5.0.1
+requests>=2.31.0
+pandas>=2.2.0
+pyarrow>=15.0.0
+python-dotenv>=1.0.0
+
+# Tests
+pytest>=7.4.3
+
+# Optional: LangSmith verification
+langsmith>=0.1.0
